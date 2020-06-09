@@ -3,29 +3,26 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/codeInBit/mkobo-test/routes"
-
+	"github.com/codeInBit/mkobo-test/controllers"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
+	var err error
+	var server = controllers.Server{}
+
+	err = godotenv.Load()
 
 	if err != nil {
-		log.Fatal("Error loading .env file :")
+		log.Fatal("Error loading .env file : %v", err)
 	} else {
-		fmt.Printf("Successfully loaded environmental variable\n")
+		fmt.Println("Success loading .env file")
 	}
 
+	server.Initialize(os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_PORT"), os.Getenv("DB_HOST"), os.Getenv("DB_NAME"))
+
 	port := os.Getenv("PORT")
-
-	// Handle routes
-	http.Handle("/", routes.Handlers())
-
-	// serve
-	log.Printf("Server up on port '%s'", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	server.Run(":" + port)
 }
