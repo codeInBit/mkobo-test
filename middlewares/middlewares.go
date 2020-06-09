@@ -24,7 +24,7 @@ func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := auth.TokenValid(r)
 		if err != nil {
-			utilities.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+			utilities.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"), "Invalid Token")
 			return
 		}
 		next(w, r)

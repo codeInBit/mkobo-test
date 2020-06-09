@@ -7,23 +7,34 @@ import (
 )
 
 //JSON - This format JSON responses
-func JSON(w http.ResponseWriter, statusCode int, data interface{}) {
+func JSON(w http.ResponseWriter, statusCode int, data interface{}, message string) {
 	w.WriteHeader(statusCode)
-	err := json.NewEncoder(w).Encode(data)
+
+	format := struct {
+		Success bool `json:"success"`
+		Data    interface{} `json:"data"`
+		Message string `json:"message"`
+	}{
+		Success: true,
+		Data:    data,
+		Message: message,
+	}
+
+	err := json.NewEncoder(w).Encode(format)
 	if err != nil {
 		fmt.Fprintf(w, "%s", err.Error())
 	}
 }
 
 //ERROR - This format error messages
-func ERROR(w http.ResponseWriter, statusCode int, err error) {
+func ERROR(w http.ResponseWriter, statusCode int, err error, message string) {
 	if err != nil {
 		JSON(w, statusCode, struct {
 			Error string `json:"error"`
 		}{
 			Error: err.Error(),
-		})
+		}, message)
 		return
 	}
-	JSON(w, http.StatusBadRequest, nil)
+	JSON(w, http.StatusBadRequest, nil, message)
 }
