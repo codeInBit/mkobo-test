@@ -12,12 +12,13 @@ import (
 )
 
 func main() {
-	e := godotenv.Load()
+	err := godotenv.Load()
 
-	if e != nil {
-		log.Fatal("Error loading .env file")
+	if err != nil {
+		log.Fatal("Error loading .env file :")
+	} else {
+		fmt.Printf("Successfully loaded environmental variable\n")
 	}
-	fmt.Println(e)
 
 	port := os.Getenv("PORT")
 
