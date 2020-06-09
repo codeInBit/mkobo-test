@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/badoux/checkmail"
+	"github.com/codeInBit/mkobo-test/auth"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -101,4 +102,21 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 		return &User{}, err
 	}
 	return u, nil
+}
+
+func (u *User) SignIn(email, password string, db *gorm.DB) (string, error) {
+
+	var err error
+
+	user := User{}
+
+	err = db.Debug().Where("email = ?", email).Take(&user).Error
+	if err != nil {
+		return "", err
+	}
+	err = VerifyPassword(user.Password, password)
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return "", err
+	}
+	return auth.CreateToken(user.ID)
 }

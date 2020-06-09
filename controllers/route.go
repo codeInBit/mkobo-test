@@ -12,4 +12,6 @@ func (s *Server) LoadRoutes() {
 
 	//User routes
 	api.HandleFunc("/users/register", middlewares.CommonMiddleware(s.Register)).Methods("POST")
+	api.HandleFunc("/users/login", middlewares.CommonMiddleware(s.Login)).Methods("POST")
+
 }
