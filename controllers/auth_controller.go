@@ -67,5 +67,10 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utilities.JSON(w, http.StatusOK, token, "Login Successful")
+	var result = map[string]interface{}{}
+	result["token"] = token
+	result["tokenType"] = "Bearer"
+	result["user"] = user
+
+	utilities.JSON(w, http.StatusOK, result, "Login Successful")
 }
