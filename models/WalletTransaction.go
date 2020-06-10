@@ -1,6 +1,10 @@
 package models
 
 import (
+	"math/rand"
+	"strconv"
+	"time"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -11,6 +15,28 @@ type WalletTransaction struct {
 	Amount         int    `gorm:"default:10000" json:"amount"`
 	PrevBalance    int    `gorm:"" json:"prev_balance"`
 	CurrentBalance int    `gorm:"" json:"current_balance"`
+	Effect         string `gorm:"" json:"effect"`
 	Status         string `gorm:"" json:"status"`
 	Reference      string `gorm:"" json:"reference"`
+	Narration      string `gorm:"" json:"narration"`
+}
+
+//BeforeSave - This function performs some operation before gorm Create operation
+func (wt *WalletTransaction) BeforeSave() error {
+	generator := rand.New(rand.NewSource(time.Now().UnixNano()))
+	wt.Reference = strconv.Itoa(generator.Int())
+
+	return nil
+}
+
+//SaveTransaction - This logs every transaction that happened on every users wallet
+func (wt *WalletTransaction) SaveTransaction(walletID uint, amount, prevBalance, currentBalance int, effect, status, narration string, db *gorm.DB) error {
+	var err error
+
+	err = db.Debug().Create(&wt).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
