@@ -33,7 +33,7 @@ func (s *Server) Initialize(DbUser, DbPassword, DbPort, DbHost, DbName string) {
 	}
 
 	//database migration
-	s.DB.Debug().AutoMigrate(&models.User{}, &models.PasswordReset{})
+	s.DB.Debug().AutoMigrate(&models.User{}, &models.PasswordReset{}, &models.Wallet{})
 
 	s.Router = mux.NewRouter()
 	s.LoadRoutes()
