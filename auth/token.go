@@ -13,16 +13,18 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-func CreateToken(userId uint) (string, error) {
+//CreateToken - Generate JWT token for login access
+func CreateToken(userID uint) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["userId"] = userId
+	claims["userId"] = userID
 	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() //Token expires after 1 hour
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 
 }
 
+//TokenValid - Validates token to confirm if it is valid
 func TokenValid(r *http.Request) error {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -40,6 +42,7 @@ func TokenValid(r *http.Request) error {
 	return nil
 }
 
+//ExtractToken - This return the token that beongs to the logged in user
 func ExtractToken(r *http.Request) string {
 	keys := r.URL.Query()
 	token := keys.Get("token")
@@ -53,7 +56,8 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
-func ExtractTokenID(r *http.Request) (uint32, error) {
+//ExtractTokenID - This return the userID of the logged in user
+func ExtractTokenID(r *http.Request) (uint, error) {
 
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -71,7 +75,7 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 		if err != nil {
 			return 0, err
 		}
-		return uint32(uid), nil
+		return uint(uid), nil
 	}
 	return 0, nil
 }
