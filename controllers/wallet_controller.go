@@ -74,6 +74,3 @@ func (s *Server) Transfer(w http.ResponseWriter, r *http.Request) {
 	utilities.JSON(w, http.StatusOK, err, "Transfer was successfull")
 }
 
-//TransactionHistory - This method list all transaction performed by a user
-func (s *Server) TransactionHistory(w http.ResponseWriter, r *http.Request) {
-}
