@@ -16,4 +16,8 @@ func (s *Server) LoadRoutes() {
 	api.HandleFunc("/users/forgot-password", middlewares.CommonMiddleware(s.ForgotPassword)).Methods("POST")
 	api.HandleFunc("/reset-password/{token}", middlewares.CommonMiddleware(s.ResetPassword)).Methods("POST")
 
+	//Wallet
+	api.HandleFunc("/wallets/transfer", middlewares.CommonMiddleware(middlewares.AuthenticationMiddleware(s.Transfer))).Methods("POST")
+	api.HandleFunc("/wallets/transaction-history", middlewares.CommonMiddleware(middlewares.AuthenticationMiddleware(s.TransactionHistory))).Methods("Get")
+
 }
