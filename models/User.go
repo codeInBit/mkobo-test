@@ -156,6 +156,21 @@ func (u *User) FindUserByEmail(email string, db *gorm.DB) (*User, error) {
 	return &user, err
 }
 
+//FindUserByID - Finds a user by ID, and returns the user object
+func (u *User) FindUserByID(uid uint, db *gorm.DB) (*User, error) {
+	var err error
+	user := User{}
+
+	err = db.Debug().Where("id = ?", uid).Take(&user).Error
+	if err != nil {
+		return &User{}, err
+	}
+	if gorm.IsRecordNotFoundError(err) {
+		return &User{}, errors.New("User Not Found")
+	}
+	return &user, err
+}
+
 //ChangePassword - Finds a user by email, and returns the user object
 func (u *User) ChangePassword(email, password string, db *gorm.DB) (*User, error) {
 	var err error
