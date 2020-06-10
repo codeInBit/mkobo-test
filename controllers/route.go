@@ -13,9 +13,12 @@ func (s *Server) LoadRoutes() {
 	//User routes
 	api.HandleFunc("/users/register", middlewares.CommonMiddleware(s.Register)).Methods("POST")
 	api.HandleFunc("/users/login", middlewares.CommonMiddleware(s.Login)).Methods("POST")
-	api.HandleFunc("/users/forgot-password", middlewares.CommonMiddleware(s.ForgotPassword)).Methods("POST")
+
+	//Forgot Password
+	api.HandleFunc("/forgot-password", middlewares.CommonMiddleware(s.ForgotPassword)).Methods("POST")
 	api.HandleFunc("/reset-password/{token}", middlewares.CommonMiddleware(s.ResetPassword)).Methods("POST")
 
+	//User wallet routes
 	api.HandleFunc("/users/wallets/transfer", middlewares.CommonMiddleware(middlewares.AuthenticationMiddleware(s.Transfer))).Methods("POST")
 	api.HandleFunc("/users/wallets/transaction-history", middlewares.CommonMiddleware(middlewares.AuthenticationMiddleware(s.UserWalletTransactionHistory))).Methods("GET")
 
