@@ -40,3 +40,17 @@ func (wt *WalletTransaction) SaveTransaction(walletID uint, amount, prevBalance,
 
 	return nil
 }
+
+
+//AllWalletTransfers - This method fetches all wallet transfer
+func (wt *WalletTransaction) AllWalletTransfers(db *gorm.DB) (*[]WalletTransaction, error) {
+	var err error
+	walletTransactions := []WalletTransaction{}
+
+	err = db.Debug().Model(&WalletTransaction{}).Limit(100).Find(&walletTransactions).Error
+	if err != nil {
+		return &[]WalletTransaction{}, err
+	}
+	return &walletTransactions, err
+}
+
