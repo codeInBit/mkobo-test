@@ -13,5 +13,7 @@ func (s *Server) LoadRoutes() {
 	//User routes
 	api.HandleFunc("/users/register", middlewares.CommonMiddleware(s.Register)).Methods("POST")
 	api.HandleFunc("/users/login", middlewares.CommonMiddleware(s.Login)).Methods("POST")
+	api.HandleFunc("/users/forgot-password", middlewares.CommonMiddleware(s.ForgotPassword)).Methods("POST")
+	api.HandleFunc("/reset", middlewares.CommonMiddleware(s.ResetLink)).Queries("token", "{token}").Methods("GET")
 
 }
