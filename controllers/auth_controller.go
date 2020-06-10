@@ -29,6 +29,7 @@ func (s *Server) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userCreated, err := user.SaveUser(s.DB)
+	userCreated.Password = ""
 
 	if err != nil {
 
