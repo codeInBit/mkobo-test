@@ -11,11 +11,9 @@ func JSON(w http.ResponseWriter, statusCode int, data interface{}, message strin
 	w.WriteHeader(statusCode)
 
 	format := struct {
-		Success bool `json:"success"`
 		Data    interface{} `json:"data"`
 		Message string `json:"message"`
 	}{
-		Success: true,
 		Data:    data,
 		Message: message,
 	}
