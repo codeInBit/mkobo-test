@@ -76,6 +76,15 @@ func (u *User) Validate(action string) error {
 		}
 		return nil
 
+	case "forgotpassword":
+		if u.Email == "" {
+			return errors.New("Required Email")
+		}
+		if err := checkmail.ValidateFormat(u.Email); err != nil {
+			return errors.New("Invalid Email")
+		}
+		return nil
+
 	default:
 		if u.Name == "" {
 			return errors.New("Required Name")
@@ -104,8 +113,8 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	return u, nil
 }
 
+//SignIn - Accept valid email and password to signs a user in, and return an access token
 func (u *User) SignIn(email, password string, db *gorm.DB) (string, error) {
-
 	var err error
 
 	user := User{}
@@ -119,4 +128,19 @@ func (u *User) SignIn(email, password string, db *gorm.DB) (string, error) {
 		return "", err
 	}
 	return auth.CreateToken(user.ID)
+}
+
+//FindUserByEmail - Finds a user by email, and returns the user object
+func (u *User) FindUserByEmail(email string, db *gorm.DB) (*User, error) {
+	var err error
+	user := User{}
+
+	err = db.Debug().Where("email = ?", email).Take(&user).Error
+	if err != nil {
+		return &User{}, err
+	}
+	if gorm.IsRecordNotFoundError(err) {
+		return &User{}, errors.New("User Not Found")
+	}
+	return &user, err
 }
