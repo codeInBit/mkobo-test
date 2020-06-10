@@ -144,3 +144,24 @@ func (u *User) FindUserByEmail(email string, db *gorm.DB) (*User, error) {
 	}
 	return &user, err
 }
+
+//ChangePassword - Finds a user by email, and returns the user object
+func (u *User) ChangePassword(email, password string, db *gorm.DB) (*User, error) {
+	var err error
+	user := User{}
+	user.Password = password
+
+	// To hash the password
+	err = u.BeforeSave()
+	if err != nil {
+		errors.New("Sorry, An Error occured")
+	}
+
+	db = db.Debug().Where("email = ?", email).Take(&user).Update("password", user.Password)
+
+	if db.Error != nil {
+		return &User{}, db.Error
+	}
+
+	return &user, err
+}

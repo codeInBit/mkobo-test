@@ -31,22 +31,23 @@ func (pr *PasswordReset) SaveResetToken(db *gorm.DB) (*PasswordReset, error) {
 	return pr, nil
 }
 
-//FindTokenByEmail - Finds a user by email, and returns the user object
-func (pr *PasswordReset) FindTokenByEmail(email string, db *gorm.DB) (*PasswordReset, error) {
+//FindResetRecordByToken - Finds a reset record by tokin, and returns the password reset object
+func (pr *PasswordReset) FindResetRecordByToken(token string, db *gorm.DB) (*PasswordReset, error) {
 	var err error
 	passwordReset := PasswordReset{}
 
-	err = db.Debug().Where("email = ?", email).Take(&passwordReset).Error
+	err = db.Debug().Where("token = ?", token).Take(&passwordReset).Error
 	if err != nil {
 		return &PasswordReset{}, err
 	}
 	if gorm.IsRecordNotFoundError(err) {
-		return &PasswordReset{}, errors.New("User Not Found")
+		return &PasswordReset{}, errors.New("Recod Not Found")
 	}
 	return &passwordReset, err
 }
 
-func (u *PasswordReset) DeleteAResetRecord(email string, db *gorm.DB) (int64, error) {
+//DeleteAResetRecord - Find a reset record by email and soft delete it
+func (pr *PasswordReset) DeleteAResetRecord(email string, db *gorm.DB) (int64, error) {
 
 	db = db.Debug().Where("email = ?", email).Take(&PasswordReset{}).Delete(&PasswordReset{})
 

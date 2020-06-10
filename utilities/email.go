@@ -47,7 +47,7 @@ func SendEmail(resetData models.PasswordReset) {
 
 	body := "<h3>Hello there</h3>" +
 		"<h4>You are receiving this email because we received a password reset request for your account.</h4>" +
-		"<form action=\"" + os.Getenv("APP_URL") + "/api/reset?token=" + resetData.Token + "\">" +
+		"<form action=\"" + os.Getenv("APP_URL") + "/api/resetToken/" + resetData.Token + "\">" +
 		"<input type=\"submit\" value=\"Reset password\">" +
 		"</form>" +
 		"<h4>If you did not request a password reset, no further action is required.</h4>" +
