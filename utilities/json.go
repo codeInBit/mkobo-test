@@ -12,7 +12,7 @@ func JSON(w http.ResponseWriter, statusCode int, data interface{}, message strin
 
 	format := struct {
 		Data    interface{} `json:"data"`
-		Message string `json:"message"`
+		Message string      `json:"message"`
 	}{
 		Data:    data,
 		Message: message,
@@ -27,11 +27,8 @@ func JSON(w http.ResponseWriter, statusCode int, data interface{}, message strin
 //ERROR - This format error messages
 func ERROR(w http.ResponseWriter, statusCode int, err error, message string) {
 	if err != nil {
-		JSON(w, statusCode, struct {
-			Error string `json:"error"`
-		}{
-			Error: err.Error(),
-		}, message)
+		message := err.Error() + ": " + message
+		JSON(w, statusCode, nil, message)
 		return
 	}
 	JSON(w, http.StatusBadRequest, nil, message)
