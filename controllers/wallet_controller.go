@@ -67,10 +67,9 @@ func (s *Server) Transfer(w http.ResponseWriter, r *http.Request) {
 	//Fund Wallet
 	err = wallet.Transfer(userID, recipientUser.ID, transferData.Amount, s.DB)
 	if err != nil {
-		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "")
+		utilities.ERROR(w, http.StatusBadRequest, err, "")
 		return
 	}
 
 	utilities.JSON(w, http.StatusOK, err, "Transfer was successfull")
 }
-

@@ -55,7 +55,8 @@ func (w *Wallet) Transfer(senderID, recipientID uint, amount int, db *gorm.DB) e
 		w.CreditWallet(recipientWallet.ID, amount, db)
 	} else {
 		//Log failed transaction based on insufficient balance
-		err = walletTransaction.SaveTransaction(senderWallet.ID, amount, senderWallet.Balance, senderWallet.Balance, "non", "cancelled", "Insufficient Balance", db)
+		err = walletTransaction.SaveTransaction(senderWallet.ID, amount, senderWallet.Balance, senderWallet.Balance, "non", "Cancelled", "Insufficient Balance", db)
+		err = errors.New("Transfer cancelled insufficient balance")
 		if err != nil {
 			return err
 		}
