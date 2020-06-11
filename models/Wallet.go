@@ -30,50 +30,56 @@ func (w *Wallet) FindUserWalletByID(uid uint, db *gorm.DB) (*Wallet, error) {
 }
 
 //Transfer - Transfer Value between two users
-func (w *Wallet) Transfer(senderID, recipientID uint, amount int, db *gorm.DB) error {
+func (w *Wallet) Transfer(senderID, recipientID uint, amount int, db *gorm.DB) (*WalletTransaction, error) {
 	var err error
 	walletTransaction := WalletTransaction{}
 
 	//Sender wallet
 	senderWallet, err := w.FindUserWalletByID(senderID, db)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	//Recipient Wallet
 	recipientWallet, err := w.FindUserWalletByID(recipientID, db)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	//Check if sender has enough value to transfer, if not, log the transaction as failed transaction
 	if senderWallet.Balance/100 >= amount {
 		//Debit recipient
-		w.DebitWallet(senderWallet.ID, amount, db)
+		senderTransaction, err := w.DebitWallet(senderWallet.ID, amount, db)
+		if err != nil {
+			return nil, err
+		}
 
 		//Credit Sender
 		w.CreditWallet(recipientWallet.ID, amount, db)
+
+		return senderTransaction, nil
 	} else {
 		//Log failed transaction based on insufficient balance
-		err = walletTransaction.SaveTransaction(senderWallet.ID, amount, senderWallet.Balance, senderWallet.Balance, "non", "Cancelled", "Insufficient Balance", db)
+		_, err := walletTransaction.SaveTransaction(senderWallet.ID, amount, senderWallet.Balance, senderWallet.Balance, "non", "Cancelled", "Insufficient Balance", db)
 		err = errors.New("Transfer cancelled insufficient balance")
 		if err != nil {
-			return err
+			return nil, err
 		}
+
 	}
 
-	return nil
+	return nil, nil
 }
 
 //CreditWallet - This method credits a user's wallet
-func (w *Wallet) CreditWallet(walletID uint, amount int, db *gorm.DB) error {
+func (w *Wallet) CreditWallet(walletID uint, amount int, db *gorm.DB) (*WalletTransaction, error) {
 	var err error
 	walletTransaction := WalletTransaction{}
 
 	//Get wallet
 	wallet, err := w.FindUserWalletByID(walletID, db)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	newAmount := amount * 100
 	prevBalance := wallet.Balance
@@ -86,27 +92,27 @@ func (w *Wallet) CreditWallet(walletID uint, amount int, db *gorm.DB) error {
 		},
 	)
 	if db.Error != nil {
-		return db.Error
+		return nil, db.Error
 	}
 
 	//Log transaction
-	err = walletTransaction.SaveTransaction(walletID, newAmount, prevBalance, currentBalance, "cr", "success", "Wallet credited", db)
+	transaction, err := walletTransaction.SaveTransaction(walletID, newAmount, prevBalance, currentBalance, "cr", "success", "Wallet credited", db)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return transaction, nil
 }
 
 //DebitWallet - This method debits a user's wallet
-func (w *Wallet) DebitWallet(walletID uint, amount int, db *gorm.DB) error {
+func (w *Wallet) DebitWallet(walletID uint, amount int, db *gorm.DB) (*WalletTransaction, error) {
 	var err error
 	walletTransaction := WalletTransaction{}
 
 	//Get wallet
 	wallet, err := w.FindUserWalletByID(walletID, db)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	newAmount := amount * 100
 	prevBalance := wallet.Balance
@@ -119,14 +125,14 @@ func (w *Wallet) DebitWallet(walletID uint, amount int, db *gorm.DB) error {
 		},
 	)
 	if db.Error != nil {
-		return db.Error
+		return nil, db.Error
 	}
 
 	//Log transaction
-	err = walletTransaction.SaveTransaction(walletID, newAmount, prevBalance, currentBalance, "cr", "success", "Wallet credited", db)
+	transaction, err := walletTransaction.SaveTransaction(walletID, newAmount, prevBalance, currentBalance, "cr", "success", "Wallet credited", db)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return transaction, nil
 }

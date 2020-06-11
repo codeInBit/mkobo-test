@@ -30,15 +30,15 @@ func (wt *WalletTransaction) BeforeSave() error {
 }
 
 //SaveTransaction - This logs every transaction that happened on every users wallet
-func (wt *WalletTransaction) SaveTransaction(walletID uint, amount, prevBalance, currentBalance int, effect, status, narration string, db *gorm.DB) error {
+func (wt *WalletTransaction) SaveTransaction(walletID uint, amount, prevBalance, currentBalance int, effect, status, narration string, db *gorm.DB) (*WalletTransaction, error) {
 	var err error
 
 	err = db.Debug().Create(&wt).Error
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return wt, nil
 }
 
 //AllWalletTransactions - This method fetches all wallet transfer
