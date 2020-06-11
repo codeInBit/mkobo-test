@@ -17,7 +17,6 @@ type User struct {
 	Name     string `gorm:"size:255;not null" json:"name"`
 	Email    string `gorm:"size:100;not null;unique" json:"email"`
 	Password string `gorm:"size:100;not null;" json:"password"`
-	Wallet   Wallet
 }
 
 //Hash - This accepts a password string and returned the hashed version
@@ -109,12 +108,13 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	var err error
 	wallet := Wallet{}
 
+	//Ceate Wallet
 	err = db.Debug().Create(&u).Error
 	if err != nil {
 		return &User{}, err
 	}
 
-	//Ceate Wallet
+	//Ceate wallet for the user (A user has 100 naira -- 10000kobo by default when created)
 	wallet.UserID = u.ID
 	err = db.Debug().Create(&wallet).Error
 	if err != nil {

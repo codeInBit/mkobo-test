@@ -25,7 +25,7 @@ func (s *Server) Register(w http.ResponseWriter, r *http.Request) {
 	user.Prepare()
 	err = user.Validate("register")
 	if err != nil {
-		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "Validation error, please check all required fields")
+		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "")
 		return
 	}
 	userCreated, err := user.SaveUser(s.DB)
@@ -34,7 +34,7 @@ func (s *Server) Register(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		formattedError := utilities.FormatError(err.Error())
-		utilities.ERROR(w, http.StatusInternalServerError, formattedError, "Validation error, please check all required fields")
+		utilities.ERROR(w, http.StatusInternalServerError, formattedError, "")
 		return
 	}
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, userCreated.ID))
@@ -58,13 +58,13 @@ func (s *Server) Login(w http.ResponseWriter, r *http.Request) {
 	user.Prepare()
 	err = user.Validate("login")
 	if err != nil {
-		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "Validation error, please check all required fields")
+		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "")
 		return
 	}
 	token, err := user.SignIn(user.Email, user.Password, s.DB)
 	if err != nil {
 		formattedError := utilities.FormatError(err.Error())
-		utilities.ERROR(w, http.StatusUnprocessableEntity, formattedError, "Validation error, please check all required fields")
+		utilities.ERROR(w, http.StatusUnprocessableEntity, formattedError, "")
 		return
 	}
 

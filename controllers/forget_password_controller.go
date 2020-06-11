@@ -16,6 +16,8 @@ func (s *Server) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "Sorry, An error occured!")
 		return
 	}
+
+	//Assign needed models
 	user := models.User{}
 	passwordreset := models.PasswordReset{}
 
@@ -28,15 +30,18 @@ func (s *Server) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	user.Prepare()
 	err = user.Validate("forgotpassword")
 	if err != nil {
-		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "Validation error, please check all required fields")
+		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "")
 		return
 	}
+
+	//Fetch user using email
 	result, err := user.FindUserByEmail(user.Email, s.DB)
 	if err != nil {
 		formattedError := utilities.FormatError(err.Error())
-		utilities.ERROR(w, http.StatusUnprocessableEntity, formattedError, "Error")
+		utilities.ERROR(w, http.StatusUnprocessableEntity, formattedError, "")
 		return
 	}
+	result.Password = ""
 
 	//Delete existing reset token record and a new Save password reset token
 	passwordreset.Email = user.Email
@@ -80,29 +85,26 @@ func (s *Server) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	//Confirm if token exist
 	resetRecord, err := passwordreset.FindResetRecordByToken(resetData.Token, s.DB)
 	if err != nil {
-		formattedError := utilities.FormatError(err.Error())
-		utilities.ERROR(w, http.StatusUnprocessableEntity, formattedError, "Error")
+		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "")
 		return
 	}
 
 	//Update Password of the user assigned to the token
 	if resetData.Password == resetData.PasswordConfirmation {
 		updatedUser, err = user.ChangePassword(resetRecord.Email, resetData.Password, s.DB)
-
+		updatedUser.Password = ""
 		if err != nil {
-			formattedError := utilities.FormatError(err.Error())
-			utilities.ERROR(w, http.StatusInternalServerError, formattedError, "Error")
+			utilities.ERROR(w, http.StatusInternalServerError, err, "")
 			return
 		}
 
 		//Delete token record from password reset table
 		_, err = passwordreset.DeleteAResetRecord(updatedUser.Email, s.DB)
 
+		utilities.JSON(w, http.StatusOK, updatedUser, "Password Updated Successfully")
+		return
 	} else {
 		utilities.ERROR(w, http.StatusUnprocessableEntity, nil, "Passwords do not match")
 		return
 	}
-
-	utilities.JSON(w, http.StatusCreated, updatedUser, "Password Updated Successfully")
-
 }

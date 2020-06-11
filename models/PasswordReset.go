@@ -38,10 +38,10 @@ func (pr *PasswordReset) FindResetRecordByToken(token string, db *gorm.DB) (*Pas
 
 	err = db.Debug().Where("token = ?", token).Take(&passwordReset).Error
 	if err != nil {
-		return &PasswordReset{}, err
+		return &PasswordReset{}, errors.New("Password reset request record not found")
 	}
 	if gorm.IsRecordNotFoundError(err) {
-		return &PasswordReset{}, errors.New("Recod Not Found")
+		return &PasswordReset{}, errors.New("Password reset request record not found")
 	}
 	return &passwordReset, err
 }

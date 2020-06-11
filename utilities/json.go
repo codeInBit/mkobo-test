@@ -27,7 +27,7 @@ func JSON(w http.ResponseWriter, statusCode int, data interface{}, message strin
 //ERROR - This format error messages
 func ERROR(w http.ResponseWriter, statusCode int, err error, message string) {
 	if err != nil {
-		message := err.Error() + ": " + message
+		message := err.Error() + message
 		JSON(w, statusCode, nil, message)
 		return
 	}
