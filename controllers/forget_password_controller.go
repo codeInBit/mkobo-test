@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
+	"html"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/codeInBit/mkobo-test/models"
 	"github.com/codeInBit/mkobo-test/utilities"
@@ -79,6 +82,23 @@ func (s *Server) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &resetData)
 	if err != nil {
 		utilities.ERROR(w, http.StatusUnprocessableEntity, err, "Sorry, An error occured!")
+		return
+	}
+
+	//Perform validation on TransferData inputs
+	resetData.Password = html.EscapeString(strings.TrimSpace(resetData.Password))
+	resetData.PasswordConfirmation = html.EscapeString(strings.TrimSpace(resetData.PasswordConfirmation))
+
+	if resetData.Token == "" {
+		utilities.ERROR(w, http.StatusUnauthorized, errors.New("Reset token is Required"), "")
+		return
+	}
+	if resetData.Password == "" {
+		utilities.ERROR(w, http.StatusUnauthorized, errors.New("Password is Required"), "")
+		return
+	}
+	if resetData.PasswordConfirmation == "" {
+		utilities.ERROR(w, http.StatusUnauthorized, errors.New("Confirm password is Required"), "")
 		return
 	}
 
