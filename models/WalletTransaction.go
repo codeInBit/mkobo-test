@@ -33,12 +33,22 @@ func (wt *WalletTransaction) BeforeSave() error {
 func (wt *WalletTransaction) SaveTransaction(walletID uint, amount, prevBalance, currentBalance int, effect, status, narration string, db *gorm.DB) (*WalletTransaction, error) {
 	var err error
 
-	err = db.Debug().Create(&wt).Error
+	walletTransaction := WalletTransaction{
+		WalletID:       walletID,
+		Amount:         amount,
+		PrevBalance:    prevBalance,
+		CurrentBalance: currentBalance,
+		Effect:         effect,
+		Status:         status,
+		Narration:      narration,
+	}
+
+	err = db.Debug().Create(&walletTransaction).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return wt, nil
+	return &walletTransaction, nil
 }
 
 //AllWalletTransactions - This method fetches all wallet transfer

@@ -58,14 +58,13 @@ func (w *Wallet) Transfer(senderID, recipientID uint, amount int, db *gorm.DB) (
 		w.CreditWallet(recipientWallet.ID, amount, db)
 
 		return senderTransaction, nil
-	} else {
-		//Log failed transaction based on insufficient balance
-		_, err := walletTransaction.SaveTransaction(senderWallet.ID, amount, senderWallet.Balance, senderWallet.Balance, "non", "Cancelled", "Insufficient Balance", db)
-		err = errors.New("Transfer cancelled insufficient balance")
-		if err != nil {
-			return nil, err
-		}
+	}
 
+	//Log failed transaction based on insufficient balance
+	_, err = walletTransaction.SaveTransaction(senderWallet.ID, amount*100, senderWallet.Balance, senderWallet.Balance, "non", "failure", "Insufficient Balance", db)
+	err = errors.New("Transfer cancelled insufficient balance")
+	if err != nil {
+		return nil, err
 	}
 
 	return nil, nil
@@ -129,7 +128,7 @@ func (w *Wallet) DebitWallet(walletID uint, amount int, db *gorm.DB) (*WalletTra
 	}
 
 	//Log transaction
-	transaction, err := walletTransaction.SaveTransaction(walletID, newAmount, prevBalance, currentBalance, "cr", "success", "Wallet credited", db)
+	transaction, err := walletTransaction.SaveTransaction(walletID, newAmount, prevBalance, currentBalance, "dr", "success", "Wallet debited", db)
 	if err != nil {
 		return nil, err
 	}
