@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/codeInBit/mkobo-test/auth"
-	"github.com/codeInBit/mkobo-test/utilities"
+	"github.com/codeInBit/wallet-app/auth"
+	"github.com/codeInBit/wallet-app/utilities"
 )
 
 // CommonMiddleware - Set content-type

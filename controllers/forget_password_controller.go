@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/codeInBit/mkobo-test/models"
-	"github.com/codeInBit/mkobo-test/utilities"
+	"github.com/codeInBit/wallet-app/models"
+	"github.com/codeInBit/wallet-app/utilities"
 )
 
 //ForgotPassword - This method accepts user email, and sends a mail containing link to reset a user's password

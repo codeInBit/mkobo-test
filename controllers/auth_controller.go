@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/codeInBit/mkobo-test/models"
-	"github.com/codeInBit/mkobo-test/utilities"
+	"github.com/codeInBit/wallet-app/models"
+	"github.com/codeInBit/wallet-app/utilities"
 )
 
 //Register - This method registers user

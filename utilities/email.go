@@ -8,7 +8,7 @@ import (
 	"net/smtp"
 	"os"
 
-	"github.com/codeInBit/mkobo-test/models"
+	"github.com/codeInBit/wallet-app/models"
 	"github.com/joho/godotenv"
 )
 

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/badoux/checkmail"
-	"github.com/codeInBit/mkobo-test/auth"
+	"github.com/codeInBit/wallet-app/auth"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )

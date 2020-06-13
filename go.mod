@@ -1,4 +1,4 @@
-module github.com/codeInBit/mkobo-test
+module github.com/codeInBit/wallet-app
 
 go 1.14
 

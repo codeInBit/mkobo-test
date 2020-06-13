@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 
-	"github.com/codeInBit/mkobo-test/models"
+	"github.com/codeInBit/wallet-app/models"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql" //mysql database driver
 )

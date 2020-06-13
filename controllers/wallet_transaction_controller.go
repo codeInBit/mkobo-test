@@ -4,9 +4,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/codeInBit/mkobo-test/auth"
-	"github.com/codeInBit/mkobo-test/models"
-	"github.com/codeInBit/mkobo-test/utilities"
+	"github.com/codeInBit/wallet-app/auth"
+	"github.com/codeInBit/wallet-app/models"
+	"github.com/codeInBit/wallet-app/utilities"
 )
 
 //AllWalletTransactionHistory - This method returns list all wallet transactions

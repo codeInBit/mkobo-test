@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/codeInBit/mkobo-test/utilities"
+	"github.com/codeInBit/wallet-app/utilities"
 )
 
 //Home - This handles the "/" endpoint just to display a welcome message

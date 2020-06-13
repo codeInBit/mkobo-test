@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/codeInBit/mkobo-test/controllers"
+	"github.com/codeInBit/wallet-app/controllers"
 	"github.com/joho/godotenv"
 )
 

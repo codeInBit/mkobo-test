@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/codeInBit/mkobo-test/auth"
-	"github.com/codeInBit/mkobo-test/models"
-	"github.com/codeInBit/mkobo-test/utilities"
+	"github.com/codeInBit/wallet-app/auth"
+	"github.com/codeInBit/wallet-app/models"
+	"github.com/codeInBit/wallet-app/utilities"
 )
 
 //Transfer - This method allow tranfer of value between two users

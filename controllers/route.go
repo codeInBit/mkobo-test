@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/codeInBit/mkobo-test/middlewares"
+	"github.com/codeInBit/wallet-app/middlewares"
 )
 
 //LoadRoutes - This is where all the routes are defined
